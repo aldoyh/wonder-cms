@@ -1,44 +1,54 @@
-# WonderCMS + here.now Publishing Boilerplate
+# WonderCMS Bilingual Static Publisher
 
-This repository is intended to become a bilingual WonderCMS starter that uses GitHub as the source of truth, GitHub Actions as the build/hydration pipeline, here.now Drive as the generated bundle/media storage layer, and here.now Sites as the final static publishing target.
+A bilingual WonderCMS starter that uses GitHub as the source repository, GitHub Actions as the build runner, and here.now as the final static publishing target.
 
-## Target workflow
-
-```text
-GitHub repo
-  -> GitHub Actions CI
-  -> hydrate WonderCMS content and media
-  -> boot PHP locally in CI
-  -> generate/crawl static output
-  -> collect images, video, audio, documents, fonts, JSON/XML assets
-  -> upload /dist to here.now Drive
-  -> publish the Drive version to here.now Sites
-```
-
-## Required architecture
-
-- `/cms` contains a fresh copy of WonderCMS from `WonderCMS/wondercms`.
-- `/content/en` contains English boilerplate content.
-- `/content/ar` contains Arabic boilerplate content.
-- `/media` contains source media files.
-- `/dist` contains generated static output and must not be committed.
-- `/scripts` contains hydration, build, media, validation, Drive upload, and publish scripts.
-- `.github/workflows/publish.yml` builds and publishes the generated site.
-- `docs/` contains full project documentation.
-
-## Required secrets
-
-Add these in GitHub repository settings before enabling publication:
+## Architecture
 
 ```text
-HERENOW_API_KEY
-HERENOW_SLUG
+GitHub repository
+  -> GitHub Actions
+  -> PHP local build server
+  -> static export into dist
+  -> media copy into dist/assets/media
+  -> here.now Drive storage
+  -> here.now Sites release
 ```
 
-## Important runtime rule
+## Target layout
 
-WonderCMS requires PHP for editing/building. The final live site published to here.now should be generated static output only.
+```text
+cms/                         WonderCMS source
+content/en/                  English source pages
+content/ar/                  Arabic source pages
+media/                       Source media
+scripts/                     Build helpers
+docs/                        Documentation
+dist/                        Generated output
+.github/workflows/publish.yml
+```
 
-## Codex task
+## Goals
 
-Use the issue titled **Codex: Build WonderCMS bilingual here.now publishing pipeline** as the implementation brief.
+- Fresh WonderCMS source in `cms/`.
+- English and Arabic boilerplate pages.
+- RTL support for Arabic.
+- LTR support for English.
+- Language switcher.
+- SEO and hreflang metadata.
+- Static export into `dist/`.
+- Media copied into `dist/assets/media/`.
+- GitHub Actions build workflow.
+- here.now Drive upload and Sites release scripts.
+
+## Local target commands
+
+```bash
+bash scripts/dev-serve.sh
+bash scripts/build-static.sh
+bash scripts/collect-media.sh
+bash scripts/validate-static.sh
+```
+
+## Implementation brief
+
+See `PROJECT_BRIEF.md`.
