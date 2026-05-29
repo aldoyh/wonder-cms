@@ -14,40 +14,31 @@ GitHub repository
   -> here.now Sites release
 ```
 
-## Target layout
+## Layout
 
 ```text
-cms/                         WonderCMS source
+cms/                         WonderCMS source and custom theme
 content/en/                  English source pages
 content/ar/                  Arabic source pages
 media/                       Source media
 scripts/                     Build helpers
 docs/                        Documentation
-dist/                        Generated output
+dist/                        Generated output, not committed
 .github/workflows/publish.yml
 ```
 
-## Goals
-
-- Fresh WonderCMS source in `cms/`.
-- English and Arabic boilerplate pages.
-- RTL support for Arabic.
-- LTR support for English.
-- Language switcher.
-- SEO and hreflang metadata.
-- Static export into `dist/`.
-- Media copied into `dist/assets/media/`.
-- GitHub Actions build workflow.
-- here.now Drive upload and Sites release scripts.
-
-## Local target commands
+## Local commands
 
 ```bash
 bash scripts/dev-serve.sh
 bash scripts/build-static.sh
 bash scripts/collect-media.sh
 bash scripts/validate-static.sh
+HERENOW_DRY_RUN=1 bash scripts/upload-drive.sh
+HERENOW_DRY_RUN=1 bash scripts/publish-here-now.sh
 ```
+
+The generated routes are `/`, `/en/`, `/en/about/`, `/en/contact/`, `/ar/`, `/ar/about/`, and `/ar/contact/`.
 
 ## Implementation brief
 

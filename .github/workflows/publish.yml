@@ -1,0 +1,50 @@
+name: Publish WonderCMS static site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      HERENOW_API_KEY: ${{ secrets.HERENOW_API_KEY }}
+      HERENOW_SLUG: ${{ secrets.HERENOW_SLUG }}
+      HERENOW_DRY_RUN: ${{ secrets.HERENOW_API_KEY == '' && '1' || '0' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: curl, mbstring, zip
+
+      - name: Install shell tools
+        run: sudo apt-get update && sudo apt-get install -y curl rsync
+
+      - name: Hydrate WonderCMS content
+        run: php scripts/hydrate.php
+
+      - name: Build static site
+        run: bash scripts/build-static.sh
+
+      - name: Collect media
+        run: bash scripts/collect-media.sh
+
+      - name: Validate static output
+        run: bash scripts/validate-static.sh
+
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: wonder-cms-dist
+          path: dist
+
+      - name: Upload bundle to here.now Drive
+        run: bash scripts/upload-drive.sh
+
+      - name: Publish here.now Site
+        run: bash scripts/publish-here-now.sh
